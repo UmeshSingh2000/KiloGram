@@ -1,5 +1,6 @@
 const User = require('../Database/Models/userSchema');
-const { hashPassword } = require('../Utils/password');
+const isEmail = require('../Utils/isEmail');
+const { hashPassword, comparePassword } = require('../Utils/password');
 
 const userRegister = async (req, res) => {
     try {
@@ -8,7 +9,7 @@ const userRegister = async (req, res) => {
         //trim inputs
         name = name?.trim();
         userName = userName?.trim();
-        email = email?.trim();
+        email = email?.trim().toLowerCase();
         if (!name || !userName || !password || !email) {
             return res.status(400).json({ message: "All fields Required!" });
         }
@@ -46,7 +47,18 @@ const userLogin = async (req, res) => {
         if (!identifier || !password) {
             return res.status(400).json({ message: "All field Required!" });
         }
-        
+        const email = isEmail(identifier)
+        const query = email ? { email: identifier.trim().toLowerCase() } : { userName: identifier.trim() }
+
+        const user = await User.findOne(query);
+        if (!user) {
+            return res.status(404).json({ message: `User does Not exist with this ${email ? 'Email' : 'UserName'}` })
+        }
+        const passMatch = await comparePassword(password, user.password)
+        if (!passMatch) {
+            return res.status(401).json({ message: "Password is incorrect" });
+        }
+        res.status(200).json({ message: "Login Successfull" })
     } catch (error) {
         console.error('Error in user Login:', error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -54,5 +66,6 @@ const userLogin = async (req, res) => {
 }
 
 module.exports = {
-    userRegister
+    userRegister,
+    userLogin
 }

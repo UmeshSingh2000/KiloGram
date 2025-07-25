@@ -1,11 +1,12 @@
 const express = require('express');
+const helmet = require('helmet')
 const dbConnect = require('./Database/dbConfig');
 const app = express();
 require('dotenv').config();
 const userRoutes = require('./Routes/userRoutes')
 
 app.use(express.json());
-
+app.use(helmet())
 
 //database connection
 dbConnect();

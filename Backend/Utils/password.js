@@ -11,7 +11,17 @@ const hashPassword = async(password)=>{
     }
 }
 
-
+const comparePassword = async(password,hashedPassword)=>{
+    try {
+        if(!password || !hashedPassword){
+            throw new Error('Password is Required!')
+        }
+        return bcrypt.compare(password,hashedPassword);
+    } catch (error) {
+        throw error
+    }
+}
 module.exports = {
-    hashPassword
+    hashPassword,
+    comparePassword
 }
