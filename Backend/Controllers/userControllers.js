@@ -40,6 +40,19 @@ const userRegister = async (req, res) => {
     }
 }
 
+const userLogin = async (req, res) => {
+    try {
+        const { identifier, password } = req.body // identifier can be email || username
+        if (!identifier || !password) {
+            return res.status(400).json({ message: "All field Required!" });
+        }
+        
+    } catch (error) {
+        console.error('Error in user Login:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     userRegister
 }
