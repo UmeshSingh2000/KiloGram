@@ -1,4 +1,5 @@
 const User = require('../Database/Models/userSchema');
+const generateToken = require('../Utils/generateToken');
 const isEmail = require('../Utils/isEmail');
 const { hashPassword, comparePassword } = require('../Utils/password');
 
@@ -58,7 +59,9 @@ const userLogin = async (req, res) => {
         if (!passMatch) {
             return res.status(401).json({ message: "Password is incorrect" });
         }
-        res.status(200).json({ message: "Login Successfull" })
+        // generate token
+        const token = generateToken(user._id);
+        res.status(200).json({ message: "Login Successfull", token })
     } catch (error) {
         console.error('Error in user Login:', error);
         res.status(500).json({ message: 'Internal Server Error' });
