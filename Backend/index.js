@@ -2,6 +2,7 @@ const express = require('express');
 const dbConnect = require('./Database/dbConfig');
 const app = express();
 require('dotenv').config();
+const userRoutes = require('./Routes/userRoutes')
 
 app.use(express.json());
 
@@ -14,6 +15,9 @@ app.get('/',(req,res)=>{
         message: 'Backend is running'
     });
 });
+
+app.use('/api',userRoutes)
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

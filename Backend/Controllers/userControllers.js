@@ -3,7 +3,7 @@ const { hashPassword } = require('../Utils/password');
 
 const userRegister = async (req, res) => {
     try {
-        const { name, userName, password, email } = req.body;
+        let { name, userName, password, email } = req.body;
 
         //trim inputs
         name = name?.trim();
