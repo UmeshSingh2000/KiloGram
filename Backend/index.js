@@ -3,11 +3,14 @@ const helmet = require('helmet')
 const dbConnect = require('./Database/dbConfig');
 const app = express();
 require('dotenv').config();
+const cors = require('cors')
 const userRoutes = require('./Routes/userRoutes')
 
 app.use(express.json());
 app.use(helmet())
-
+app.use(cors({
+    origin:'http://localhost:5173'
+}))
 //database connection
 dbConnect();
 

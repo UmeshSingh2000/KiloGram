@@ -5,6 +5,7 @@ import './index.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Login from './Pages/Login.jsx'
 import Register from './Pages/Register.jsx'
+import { Toaster } from 'react-hot-toast'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -12,5 +13,7 @@ createRoot(document.getElementById('root')).render(
       <Route path="/" element={<Login />} />
       <Route path="/register" element={<Register />} />
     </Routes>
+    <Toaster
+      position="top-right" />
   </BrowserRouter>
 )
