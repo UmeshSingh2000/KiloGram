@@ -14,6 +14,9 @@ const userRegister = async (req, res) => {
         if (!name || !userName || !password || !email) {
             return res.status(400).json({ message: "All fields Required!" });
         }
+        if (password.length < 6) {
+            return res.status(400).json({ message: 'Password must be at least 6 Character long' })
+        }
 
         //check if the email is already exist
         const emailExist = await User.findOne({ email });
@@ -38,7 +41,11 @@ const userRegister = async (req, res) => {
         res.status(201).json({ message: "Account created Successfully" })
     } catch (error) {
         console.error('Error in user registration:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        if (error.name === 'ValidationError') {
+            const errors = Object.values(error.errors).map(err => err.message);
+            return res.status(400).json({ errors });
+        }
+        res.status(500).json({ message: error || 'Internal Server Error' });
     }
 }
 
