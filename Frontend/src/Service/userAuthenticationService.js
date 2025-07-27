@@ -1,5 +1,4 @@
 // authentication related servies
-import { toast } from 'react-hot-toast'
 import axios from 'axios'
 import StatusCodes from '../helpers/statusCodes';
 const api = import.meta.env.VITE_BACKEND_API
@@ -75,7 +74,17 @@ const registerUser = async ({ name, email, password, userName }) => {
     }
 }
 
+const checkUserAuth = async (token) => {
+    const response = await axios.get(`${api}/auth-check`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+}
+
 export {
     loginUser,
-    registerUser
+    registerUser,
+    checkUserAuth
 }

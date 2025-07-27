@@ -4,7 +4,8 @@ const dbConnect = require('./Database/dbConfig');
 const app = express();
 require('dotenv').config();
 const cors = require('cors')
-const userRoutes = require('./Routes/userRoutes')
+const userRoutes = require('./Routes/userRoutes');
+const authenticateToken = require('./Middlewares/authenticateToken');
 
 app.use(express.json());
 app.use(helmet())
@@ -21,6 +22,9 @@ app.get('/',(req,res)=>{
 });
 
 app.use('/api',userRoutes)
+app.get('/api/auth-check',authenticateToken,(req,res)=>{
+    res.status(200).json({message:"Authenticated!"})
+})
 
 
 const port = process.env.PORT || 3000;

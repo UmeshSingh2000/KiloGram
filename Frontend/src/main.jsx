@@ -1,19 +1,17 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
+import { BrowserRouter } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import { store } from './Redux/store.js'
+import App from './Pages/App.jsx'
 
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Login from './Pages/Login.jsx'
-import Register from './Pages/Register.jsx'
-import { Toaster } from 'react-hot-toast'
+
 
 createRoot(document.getElementById('root')).render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-    </Routes>
-    <Toaster
-      position="top-right" />
-  </BrowserRouter>
+
+  <Provider store={store}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>
 )

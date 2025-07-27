@@ -37,6 +37,7 @@ const Register = () => {
       const errors = error?.response?.data?.errors
       if (Array.isArray(errors)) {
         errors.forEach((msg) => toast.error(msg))
+        
       }
       else {
         toast.error(error.message)
@@ -113,7 +114,7 @@ const Register = () => {
             <div className="text-center mt-4 mb-4">
               <p className="text-gray-500 text-xs leading-relaxed">
                 People who use our service may have uploaded<br />
-                your contact information to Instagram.{' '}
+                your contact information to KiloGram.{' '}
                 <a href="#" className="text-blue-400 hover:text-blue-300">
                   Learn More
                 </a>

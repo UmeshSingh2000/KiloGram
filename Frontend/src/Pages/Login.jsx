@@ -3,10 +3,14 @@ import Input from '../Components/Input';
 import { loginUser } from '../Service/userAuthenticationService';
 import toast from 'react-hot-toast';
 import StatusCodes from '../helpers/statusCodes';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../Components/Button';
+import { checkAuth } from '../Redux/Features/authSlice';
+import { useDispatch } from 'react-redux';
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [userData, setUserData] = useState({
     identifier: '',
@@ -26,6 +30,7 @@ const Login = () => {
       if (response.status === StatusCodes.OK) {
         toast.success(response.message)
         localStorage.setItem('token', response.token)
+        navigate('/home')
       }
       else if (response.status === StatusCodes.NO_CONTENT) {
         toast.error(response.message)
@@ -37,6 +42,11 @@ const Login = () => {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
+
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
