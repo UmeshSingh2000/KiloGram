@@ -4,7 +4,8 @@ const { Schema } = mongoose;
 const postSchema = new Schema({
     postedBy: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     likes: {
         type: Number,
@@ -13,7 +14,7 @@ const postSchema = new Schema({
     comments: [
         {
             type: Schema.Types.ObjectId,
-            ref: "User"
+            ref: "Comment"
         }
     ],
     image: [{
@@ -23,6 +24,7 @@ const postSchema = new Schema({
     content: {
         type: String,
         required: true,
+        maxlength: 3000
     },
     tags: [
         {
@@ -35,4 +37,4 @@ const postSchema = new Schema({
 })
 
 const postModel = mongoose.model('Post', postSchema)
-module.exports = postMode
+module.exports = postModel

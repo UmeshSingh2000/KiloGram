@@ -20,7 +20,6 @@ const authenticateToken = (req, res, next) => {
         }
         return res.status(403).json({ message: 'Authentication failed' });
     }
-
 }
 
 module.exports = authenticateToken

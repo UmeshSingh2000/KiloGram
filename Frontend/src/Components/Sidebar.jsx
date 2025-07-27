@@ -1,17 +1,17 @@
-import { 
-  Home, 
-  Search, 
-  Compass, 
-  Play, 
-  Send, 
-  Heart, 
-  Plus, 
-  User, 
+import {
+  Home,
+  Search,
+  Compass,
+  Play,
+  Send,
+  Heart,
+  Plus,
+  User,
   Menu,
   Grid3X3
 } from "lucide-react";
 
-export default function Sidebar() {
+export default function Sidebar({ onChange }) {
   const menuItems = [
     { icon: Home, label: "Home" },
     { icon: Search, label: "Search" },
@@ -35,13 +35,14 @@ export default function Sidebar() {
         <ul className="space-y-1">
           {menuItems.map((item, index) => (
             <li key={index}>
-              <a
+              <button
                 href="#"
-                className="flex items-center space-x-4 px-3 py-3 rounded-lg hover:bg-gray-800 transition-colors duration-200"
+                className="flex items-center space-x-4 px-3 py-3 w-full cursor-pointer rounded-lg hover:bg-gray-800 transition-colors duration-200"
+                onClick={() => onChange(item.label)}
               >
                 <item.icon size={24} strokeWidth={1.5} />
                 <span className="text-base font-normal">{item.label}</span>
-              </a>
+              </button>
             </li>
           ))}
         </ul>
@@ -56,7 +57,7 @@ export default function Sidebar() {
           <Menu size={24} strokeWidth={1.5} />
           <span className="text-base font-normal">More</span>
         </a>
-        
+
         <a
           href="#"
           className="flex items-center space-x-4 px-3 py-3 rounded-lg hover:bg-gray-800 transition-colors duration-200"

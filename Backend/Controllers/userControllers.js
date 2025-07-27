@@ -2,6 +2,8 @@ const User = require('../Database/Models/userSchema');
 const generateToken = require('../Utils/generateToken');
 const isEmail = require('../Utils/isEmail');
 const { hashPassword, comparePassword } = require('../Utils/password');
+const StatusCodes = require('../Utils/statusCodes');
+
 
 const userRegister = async (req, res) => {
     try {
@@ -12,21 +14,21 @@ const userRegister = async (req, res) => {
         userName = userName?.trim();
         email = email?.trim().toLowerCase();
         if (!name || !userName || !password || !email) {
-            return res.status(400).json({ message: "All fields Required!" });
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: "All fields Required!" });
         }
         if (password.length < 6) {
-            return res.status(400).json({ message: 'Password must be at least 6 Character long' })
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Password must be at least 6 Character long' })
         }
 
         //check if the email is already exist
         const emailExist = await User.findOne({ email });
         if (emailExist) {
-            return res.status(400).json({ message: "Email already exist" })
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: "Email already exist" })
         }
         //check if the userName is already exist
         const userNameExist = await User.findOne({ userName })
         if (userNameExist) {
-            return res.status(400).json({ message: "Username already exist" })
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: "Username already exist" })
         }
 
         //hash password
@@ -38,14 +40,14 @@ const userRegister = async (req, res) => {
             password: hashedPass
         })
         await newUser.save()
-        res.status(201).json({ message: "Account created Successfully" })
+        res.status(StatusCodes.CREATED).json({ message: "Account created Successfully" })
     } catch (error) {
         console.error('Error in user registration:', error);
         if (error.name === 'ValidationError') {
             const errors = Object.values(error.errors).map(err => err.message);
-            return res.status(400).json({ errors });
+            return res.status(StatusCodes.BAD_REQUEST).json({ errors });
         }
-        res.status(500).json({ message: error || 'Internal Server Error' });
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error || 'Internal Server Error' });
     }
 }
 
@@ -53,25 +55,25 @@ const userLogin = async (req, res) => {
     try {
         const { identifier, password } = req.body // identifier can be email || username
         if (!identifier || !password) {
-            return res.status(400).json({ message: "All field Required!" });
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: "All field Required!" });
         }
         const email = isEmail(identifier)
         const query = email ? { email: identifier.trim().toLowerCase() } : { userName: identifier.trim() }
 
         const user = await User.findOne(query);
         if (!user) {
-            return res.status(404).json({ message: `User does Not exist with this ${email ? 'Email' : 'UserName'}` })
+            return res.status(StatusCodes.NOT_FOUND).json({ message: `User does Not exist with this ${email ? 'Email' : 'UserName'}` })
         }
         const passMatch = await comparePassword(password, user.password)
         if (!passMatch) {
-            return res.status(401).json({ message: "Password is incorrect" });
+            return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Password is incorrect" });
         }
         // generate token
         const token = generateToken(user._id);
-        res.status(200).json({ message: "Login Successfull", token })
+        res.status(StatusCodes.OK).json({ message: "Login Successfull", token })
     } catch (error) {
         console.error('Error in user Login:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal Server Error' });
     }
 }
 
