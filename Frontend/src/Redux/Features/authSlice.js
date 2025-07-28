@@ -12,7 +12,6 @@ export const checkAuth = createAsyncThunk('auth/checkAuth', async (_, { rejectWi
         const token = localStorage.getItem('token')
         if (!token) throw new Error('Token not found');
         const data = await checkUserAuth(token)
-        console.log(data)
         return data;
     } catch (error) {
         return rejectWithValue(error.response?.data.message || error.message || 'Unauthorized')

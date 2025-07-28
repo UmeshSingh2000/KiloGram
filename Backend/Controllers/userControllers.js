@@ -77,6 +77,18 @@ const userLogin = async (req, res) => {
     }
 }
 
+
+const getMyData = async(req,res)=>{
+    try {
+        const {id} = req.user;
+        if(!id){
+            return 
+        }
+    } catch (error) {
+        
+    }
+}
+
 module.exports = {
     userRegister,
     userLogin

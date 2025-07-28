@@ -8,6 +8,7 @@ const userRoutes = require('./Routes/userRoutes');
 const postRoutes = require('./Routes/postRoutes')
 const authenticateToken = require('./Middlewares/authenticateToken');
 const cloudinaryConfig = require('./Cloudinary/config');
+const User = require('./Database/Models/userSchema')
 
 app.use(express.json());
 app.use(helmet())
@@ -27,8 +28,10 @@ app.get('/', (req, res) => {
 app.use('/api', userRoutes) //user related routes
 app.use('/api', postRoutes) //post related routes
 
-app.get('/api/auth-check', authenticateToken, (req, res) => {
-    res.status(200).json({ message: "Authenticated!", user: req.user })
+app.get('/api/auth-check', authenticateToken, async (req, res) => {
+    const { id } = req.user;
+    const user = await User.findById(id, { password: 0, __v: 0 })
+    res.status(200).json({ message: "Authenticated!", user })
 })
 
 
