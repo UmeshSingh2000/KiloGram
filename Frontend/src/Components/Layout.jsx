@@ -13,7 +13,7 @@ const Layout = () => {
             case 'Home':
                 return <Home />
             case 'Create':
-                return <CreatePost />
+                return <CreatePost onClose={setActivePage} />
             default:
                 return <Home />
         }
