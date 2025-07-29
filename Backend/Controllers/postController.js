@@ -9,7 +9,7 @@ const createPost = async (req, res) => {
         const { content } = req.body;
         const images = req.files; // array of files from multer
 
-        
+
         if (!id) {
             return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Not Allowed" });
         }
@@ -47,12 +47,24 @@ const createPost = async (req, res) => {
 
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            message: "Internal Server Error",
-            error: error.message
+            message: error || "Internal Server Error",
         });
     }
 };
 
+const getMyPost = async (req, res) => {
+    try {
+        const { id } = req.user;
+        const posts = await Post.find({ postedBy: id }).populate('postedBy', 'profilePicture userName');
+        res.status(StatusCodes.OK).json(posts)
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: error.message || "Internal Server Error",
+        })
+    }
+}
+
 module.exports = {
-    createPost
+    createPost,
+    getMyPost
 };
