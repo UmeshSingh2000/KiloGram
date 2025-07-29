@@ -2,7 +2,7 @@
 import { useDispatch } from "react-redux";
 import { checkAuth } from "../Redux/Features/authSlice";
 import { useEffect } from "react";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import {  Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
 import PrivateRoute from "../Components/PrivateRoute";
