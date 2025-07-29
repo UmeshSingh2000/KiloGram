@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { useSelector } from "react-redux"
 import StatusCodes from "../helpers/statusCodes";
 import Loader from "./Loader/Loader";
+import { createPost } from "../Service/postService";
 
 const api = import.meta.env.VITE_BACKEND_API
 
@@ -63,23 +64,22 @@ export default function CreatePost({ onClose }) {
       files.forEach((file) => {
         formData.append("image", file)
       })
-      const res = await axios.post(`${api}/createPost`,
-        formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      })
+      const token = localStorage.getItem('token')
+      const res = await createPost(formData, token)
+
       if (res.status === StatusCodes.CREATED) {
         toast.success(res.data.message)
         onClose("Home")
       }
+      else if (res.status === StatusCodes.NO_CONTENT) {
+        toast.error(res.message)
+      }
     } catch (error) {
-      toast.error(error.response.data.message)
+      toast.error(error.message)
     }
     finally {
       setLoading(false)
     }
-    // onClose("Home");
   };
 
   return (
