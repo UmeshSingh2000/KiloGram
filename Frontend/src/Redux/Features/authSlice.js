@@ -9,9 +9,7 @@ const initialState = {
 }
 export const checkAuth = createAsyncThunk('auth/checkAuth', async (_, { rejectWithValue }) => {
     try {
-        const token = localStorage.getItem('token')
-        if (!token) throw new Error('Token not found');
-        const data = await checkUserAuth(token)
+        const data = await checkUserAuth()
         return data;
     } catch (error) {
         return rejectWithValue(error.response?.data.message || error.message || 'Unauthorized')
@@ -22,7 +20,6 @@ export const authSlice = createSlice({
     initialState,
     reducers: {
         logout: (state) => {
-            localStorage.removeItem('token')
             state.isAuthenticated = false;
             state.user = null;
         }

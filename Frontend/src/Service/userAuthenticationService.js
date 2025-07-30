@@ -1,7 +1,8 @@
 // authentication related servies
 import axios from 'axios'
 import StatusCodes from '../helpers/statusCodes';
-const api = import.meta.env.VITE_BACKEND_API
+import api from '../helpers/axios';
+// const api = import.meta.env.VITE_BACKEND_API
 
 
 const loginUser = async ({ identifier, password }) => {
@@ -16,10 +17,14 @@ const loginUser = async ({ identifier, password }) => {
                 status: StatusCodes.NO_CONTENT
             }
         }
-        const response = await axios.post(`${api}/userLogin`, {
+        const response = await api.post('/userLogin', {
             identifier,
             password
         })
+        // const response = await axios.post(`${api}/userLogin`, {
+        //     identifier,
+        //     password
+        // })
         if (response.status === StatusCodes.OK) {
             return {
                 message: response.data.message,
@@ -48,10 +53,13 @@ const registerUser = async ({ name, email, password, userName }) => {
                 message: 'All Fields Required!'
             }
         }
-
-        const response = await axios.post(`${api}/userRegister`, {
-            name, email, password, userName
+        const response = await api.post('/userRegister', {
+            name,
+            email,
+            password,
+            userName
         })
+    
         if (response.status === StatusCodes.CREATED) {
             return {
                 status: StatusCodes.CREATED,
@@ -60,10 +68,6 @@ const registerUser = async ({ name, email, password, userName }) => {
         }
 
     } catch (error) {
-        // const message =
-        //     error.response.data.errors ||
-        //     error.response.data.message
-        // console.log(error.response.data.errors)
         throw {
             response: {
                 data: {
@@ -74,12 +78,8 @@ const registerUser = async ({ name, email, password, userName }) => {
     }
 }
 
-const checkUserAuth = async (token) => {
-    const response = await axios.get(`${api}/auth-check`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
+const checkUserAuth = async () => {
+    const response = await api.get('/auth-check')
     return response.data;
 }
 

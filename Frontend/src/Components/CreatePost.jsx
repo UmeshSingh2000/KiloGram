@@ -64,11 +64,10 @@ export default function CreatePost({ onClose }) {
       files.forEach((file) => {
         formData.append("image", file)
       })
-      const token = localStorage.getItem('token')
-      const res = await createPost(formData, token)
+      const res = await createPost(formData)
 
       if (res.status === StatusCodes.CREATED) {
-        toast.success(res.data.message)
+        toast.success(res.message)
         onClose("Home")
       }
       else if (res.status === StatusCodes.NO_CONTENT) {

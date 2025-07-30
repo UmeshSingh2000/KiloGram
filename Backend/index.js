@@ -4,6 +4,7 @@ const dbConnect = require('./Database/dbConfig');
 const app = express();
 require('dotenv').config();
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
 const userRoutes = require('./Routes/userRoutes');
 const postRoutes = require('./Routes/postRoutes')
 const authenticateToken = require('./Middlewares/authenticateToken');
@@ -12,8 +13,10 @@ const User = require('./Database/Models/userSchema')
 
 app.use(express.json());
 app.use(helmet())
+app.use(cookieParser())
 app.use(cors({
-    origin: 'http://localhost:5173'
+    origin: 'http://localhost:5173',
+    credentials: true
 }))
 //database connection
 dbConnect();

@@ -9,7 +9,6 @@ const createPost = async (req, res) => {
         const { content } = req.body;
         const images = req.files; // array of files from multer
 
-
         if (!id) {
             return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Not Allowed" });
         }

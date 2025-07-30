@@ -7,7 +7,6 @@ import { useSelector } from "react-redux"
 const PrivateRoute = () => {
     // const { isAuthenticated, loading } = useAuth()
     const {isAuthenticated,loading} = useSelector((state)=>state.auth)
-    console.log(isAuthenticated)
     
     if (loading || isAuthenticated === null) {
         return <Loader />
