@@ -10,8 +10,8 @@ const createPost = async (formData) => {
                 message: "All fields are required!"
             }
         }
-        const res = await api.post('/createPost',formData)
-        
+        const res = await api.post('/createPost', formData)
+
         if (res.status === StatusCodes.CREATED) {
             return {
                 status: StatusCodes.CREATED,
@@ -21,8 +21,24 @@ const createPost = async (formData) => {
 
     } catch (error) {
         console.log(error)
-        throw new Error(error.response?.data?.message);
+        throw new Error(error.response?.data?.message || "Internal Server Error");
     }
 }
+
+const getMypost = async () => {
+    try {
+        const res = await api.get('/getMyPosts')
+        if(res.status === StatusCodes.OK){
+            return {
+                status : StatusCodes.OK,
+                post : res.data.posts
+            }
+        }
+    } catch (error) {
+        console.log(error)
+        throw new Error(error.response?.data?.message || "Internal Server Error");
+    }
+}
+
 
 export { createPost }
