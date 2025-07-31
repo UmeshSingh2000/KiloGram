@@ -10,6 +10,7 @@ const createPost = async (formData) => {
                 message: "All fields are required!"
             }
         }
+        
         const res = await api.post('/createPost', formData)
 
         if (res.status === StatusCodes.CREATED) {
