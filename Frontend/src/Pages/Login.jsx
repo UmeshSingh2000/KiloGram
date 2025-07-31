@@ -5,11 +5,11 @@ import toast from 'react-hot-toast';
 import StatusCodes from '../helpers/statusCodes';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../Components/Button';
-import { checkAuth } from '../Redux/Features/authSlice';
+import { checkAuth, loginSucces } from '../Redux/Features/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Login = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const { isAuthenticated } = useSelector((state) => state.auth)
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
@@ -30,6 +30,7 @@ const Login = () => {
       const response = await loginUser(userData)
       if (response.status === StatusCodes.OK) {
         toast.success(response.message)
+        dispatch(loginSucces())
         navigate('/home')
       }
       else if (response.status === StatusCodes.NO_CONTENT) {
@@ -47,7 +48,7 @@ const Login = () => {
     if (isAuthenticated) {
       navigate('/home')
     }
-  }, [dispatch]);
+  }, [navigate, isAuthenticated]);
 
 
   return (

@@ -70,8 +70,12 @@ const userLogin = async (req, res) => {
         }
         // generate token
         const token = generateToken(user._id);
-        res.cookie('token',token)
-        res.status(StatusCodes.OK).json({ message: "Login Successfull" })
+        res.cookie('token', token)
+
+
+        const { password: _p, __v, ...userData } = user.toObject();
+
+        res.status(StatusCodes.OK).json({ message: "Login Successfull", user: userData })
     } catch (error) {
         console.error('Error in user Login:', error);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal Server Error' });

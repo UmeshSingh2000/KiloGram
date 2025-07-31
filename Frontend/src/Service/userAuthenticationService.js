@@ -2,7 +2,7 @@
 import axios from 'axios'
 import StatusCodes from '../helpers/statusCodes';
 import api from '../helpers/axios';
-// const api = import.meta.env.VITE_BACKEND_API
+
 
 
 const loginUser = async ({ identifier, password }) => {
@@ -21,15 +21,11 @@ const loginUser = async ({ identifier, password }) => {
             identifier,
             password
         })
-        // const response = await axios.post(`${api}/userLogin`, {
-        //     identifier,
-        //     password
-        // })
+
         if (response.status === StatusCodes.OK) {
             return {
                 message: response.data.message,
                 status: StatusCodes.OK,
-                token: response.data.token
             }
         }
     } catch (error) {
