@@ -54,7 +54,7 @@ const createPost = async (req, res) => {
 const getMyPost = async (req, res) => {
     try {
         const { id } = req.user;
-        const posts = await Post.find({ postedBy: id }).populate('postedBy', 'profilePicture userName');
+        const posts = await Post.find({ postedBy: id }).populate('postedBy', 'profilePicture userName').sort({ createdAt: -1 });
         res.status(StatusCodes.OK).json(posts)
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({

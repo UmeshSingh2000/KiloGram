@@ -10,7 +10,7 @@ const createPost = async (formData) => {
                 message: "All fields are required!"
             }
         }
-        
+
         const res = await api.post('/createPost', formData)
 
         if (res.status === StatusCodes.CREATED) {
@@ -29,10 +29,10 @@ const createPost = async (formData) => {
 const getMypost = async () => {
     try {
         const res = await api.get('/getMyPosts')
-        if(res.status === StatusCodes.OK){
+        if (res.status === StatusCodes.OK) {
             return {
-                status : StatusCodes.OK,
-                post : res.data.posts
+                status: StatusCodes.OK,
+                post: res.data
             }
         }
     } catch (error) {
@@ -42,4 +42,4 @@ const getMypost = async () => {
 }
 
 
-export { createPost }
+export { createPost, getMypost }
