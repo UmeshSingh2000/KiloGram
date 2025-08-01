@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken')
-const authenticateToken = (req, res, next) => {
+const authenticateRefreshToken = (req, res, next) => {
     try {
-        const token = req.cookies.token
+        const token = req.cookies.refreshToken
+
         if (!token) {
             return res.status(401).json({ message: "No token provided" })
         }
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        const decoded = jwt.verify(token, process.env.JWT_REFRESHTOKEN_SECRET)
         req.user = decoded;
         next()
     } catch (error) {
@@ -18,4 +19,4 @@ const authenticateToken = (req, res, next) => {
     }
 }
 
-module.exports = authenticateToken
+module.exports = authenticateRefreshToken

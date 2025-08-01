@@ -92,7 +92,6 @@ export default function CreatePost({ onClose }) {
         flex flex-col
         ${descriptionActive ? 'md:flex-row' : ''}
       `}>
-
             {/* Header - Mobile Only */}
             <div className="flex items-center justify-between p-4 border-b border-[#343434] md:hidden">
               {descriptionActive ? (

@@ -12,6 +12,7 @@ export const checkAuth = createAsyncThunk('auth/checkAuth', async (_, { rejectWi
         const data = await checkUserAuth()
         return data;
     } catch (error) {
+        // console.log(error)
         return rejectWithValue(error.response?.data.message || error.message || 'Unauthorized')
     }
 })

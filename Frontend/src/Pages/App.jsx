@@ -10,7 +10,6 @@ import Layout from "../Components/Layout";
 import { Toaster } from "react-hot-toast";
 
 const fulfilled = "auth/checkAuth/fulfilled"
-
 function App() {
 
     const dispatch = useDispatch();
@@ -23,19 +22,16 @@ function App() {
             }
         })()
     }, []);
-
     return (
         <>
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-
                 {/* Private Route */}
                 <Route element={<PrivateRoute />}>
                     <Route path="/home" element={<Layout />} />
                 </Route>
             </Routes>
-
             <Toaster position="top-right" />
         </>
     );

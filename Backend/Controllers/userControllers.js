@@ -1,5 +1,5 @@
 const User = require('../Database/Models/userSchema');
-const generateToken = require('../Utils/generateToken');
+const { generateToken, generateRefreshToken } = require('../Utils/generateToken');
 const isEmail = require('../Utils/isEmail');
 const { hashPassword, comparePassword } = require('../Utils/password');
 const StatusCodes = require('../Utils/statusCodes');
@@ -70,7 +70,15 @@ const userLogin = async (req, res) => {
         }
         // generate token
         const token = generateToken(user._id);
-        res.cookie('token', token)
+        const refresh = generateRefreshToken(user._id)
+        res.cookie('token', token, {
+            httpOnly:true,
+            maxAge: 15 * 60 * 1000 // 15 mint
+        })
+        res.cookie('refreshToken', refresh, {
+            httpOnly:true,
+            maxAge: 15 * 24 * 60 * 60 * 1000 // 15day
+        })
 
 
         const { password: _p, __v, ...userData } = user.toObject();
@@ -82,7 +90,22 @@ const userLogin = async (req, res) => {
     }
 }
 
+const refreshToken = (req, res) => {
+    try {
+        const token = generateToken(req.user.id)
+        res.cookie('token', token, {
+            httpOnly:true,
+            maxAge: 15 * 60 * 1000 // 15 mint
+        })
+        res.status(200).json({ message: "Access token refreshed" });
+    } catch (error) {
+        console.error(error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     userRegister,
-    userLogin
+    userLogin,
+    refreshToken
 }
