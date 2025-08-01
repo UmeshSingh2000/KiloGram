@@ -12,11 +12,11 @@ const createPost = async (formData) => {
         }
 
         const res = await api.post('/createPost', formData)
-
         if (res.status === StatusCodes.CREATED) {
             return {
                 status: StatusCodes.CREATED,
-                message: res.data.message
+                message: res.data.message,
+                post : res.data.post
             }
         }
 
@@ -30,10 +30,7 @@ const getMypost = async () => {
     try {
         const res = await api.get('/getMyPosts')
         if (res.status === StatusCodes.OK) {
-            return {
-                status: StatusCodes.OK,
-                post: res.data
-            }
+            return res.data
         }
     } catch (error) {
         console.log(error)

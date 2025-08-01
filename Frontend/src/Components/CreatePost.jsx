@@ -2,16 +2,17 @@ import axios from "axios";
 import { MoveLeft, MoveRight, X, MapPin, Users, ChevronDown } from "lucide-react";
 import React, { useRef, useState } from "react";
 import toast from 'react-hot-toast';
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import StatusCodes from "../helpers/statusCodes";
 import Loader from "./Loader/Loader";
 import { createPost } from "../Service/postService";
+import { addPost } from "../Redux/Features/postSlice";
 
 const api = import.meta.env.VITE_BACKEND_API
 
 export default function CreatePost({ onClose }) {
   const { user } = useSelector((state) => state.auth)
-
+  const dispatch = useDispatch()
 
   const inputRef = useRef(null);
   const [previews, setPreviews] = useState([]);
@@ -68,6 +69,7 @@ export default function CreatePost({ onClose }) {
 
       if (res.status === StatusCodes.CREATED) {
         toast.success(res.message)
+        dispatch(addPost(res.post))
         onClose("Home")
       }
       else if (res.status === StatusCodes.NO_CONTENT) {
