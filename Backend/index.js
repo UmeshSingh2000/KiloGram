@@ -28,8 +28,8 @@ app.get('/', (req, res) => {
     });
 });
 
-app.use('/api', userRoutes) //user related routes
-app.use('/api', postRoutes) //post related routes
+app.use('/api/user', userRoutes) //user related routes
+app.use('/api/post', postRoutes) //post related routes
 
 app.get('/api/auth-check', authenticateToken, async (req, res) => {
     const { id } = req.user;

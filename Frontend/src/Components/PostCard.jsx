@@ -1,6 +1,8 @@
-import React from 'react'
 import moment from 'moment';
 import { Heart, MessageCircle, Share } from "lucide-react"; // optional: icon library
+import { toggleLike } from '../Service/postService'
+import StatusCodes from '../helpers/statusCodes';
+import toast from 'react-hot-toast';
 const PostCard = ({ post }) => {
     const {
         postedBy,
@@ -9,10 +11,25 @@ const PostCard = ({ post }) => {
         likes,
         comments,
         createdAt,
+        _id
     } = post;
+    
+
+    const handleToggleLike = async (id) => {
+        try {
+            const res = await toggleLike(id)
+            if (res.status === StatusCodes.OK) {
+                toast.success(res.message)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
     return (
         <div>
-            <div className="max-w-md mx-auto  shadow-md  rounded-lg overflow-hidden mb-6">
+            <div className="max-w-md mx-auto shadow-md rounded-lg overflow-hidden mb-6">
                 {/* Header */}
                 <div className="flex items-center py-3">
                     <img
@@ -40,17 +57,19 @@ const PostCard = ({ post }) => {
 
                 {/* Actions */}
                 <div className="py-2 flex items-center space-x-4">
-                    <Heart
-                        className={`w-6 h-6 cursor-pointer`}
+                    <button onClick={()=>handleToggleLike(_id)}>
+                        <Heart
+                            className={`w-6 h-6 cursor-pointer`}
 
-                    />
+                        />
+                    </button>
                     <MessageCircle className="w-6 h-6 cursor-pointer" />
                     <Share />
                 </div>
 
                 {/* Likes */}
                 <div className="">
-                    <p className="text-sm font-semibold">{likes} likes</p>
+                    <p className="text-sm font-semibold">{likes.length} likes</p>
                 </div>
 
                 {/* Content */}

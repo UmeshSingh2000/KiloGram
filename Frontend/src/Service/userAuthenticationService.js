@@ -17,7 +17,7 @@ const loginUser = async ({ identifier, password }) => {
                 status: StatusCodes.NO_CONTENT
             }
         }
-        const response = await api.post('/userLogin', {
+        const response = await api.post('/user/userLogin', {
             identifier,
             password
         })
@@ -49,7 +49,7 @@ const registerUser = async ({ name, email, password, userName }) => {
                 message: 'All Fields Required!'
             }
         }
-        const response = await api.post('/userRegister', {
+        const response = await api.post('/user/userRegister', {
             name,
             email,
             password,

@@ -26,8 +26,8 @@ const Home = () => {
       {
         posts.map((post) => {
           return (
-            <div className='mt-10'>
-              <PostCard key={post._id} post={post} />
+            <div className='mt-10' key={post._id}>
+              <PostCard post={post} />
             </div>
           )
         })

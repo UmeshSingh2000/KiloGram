@@ -11,12 +11,12 @@ const createPost = async (formData) => {
             }
         }
 
-        const res = await api.post('/createPost', formData)
+        const res = await api.post('/post/createPost', formData)
         if (res.status === StatusCodes.CREATED) {
             return {
                 status: StatusCodes.CREATED,
                 message: res.data.message,
-                post : res.data.post
+                post: res.data.post
             }
         }
 
@@ -28,7 +28,7 @@ const createPost = async (formData) => {
 
 const getMypost = async () => {
     try {
-        const res = await api.get('/getMyPosts')
+        const res = await api.get('/post/getMyPosts')
         if (res.status === StatusCodes.OK) {
             return res.data
         }
@@ -38,5 +38,20 @@ const getMypost = async () => {
     }
 }
 
+const toggleLike = async (id) => {
+    try {
+        const res = await api.post(`/post/postLikeToggle/${id}`)
+        if (res.status === StatusCodes.OK) {
+            return {
+                status: StatusCodes.OK,
+                message: res.data.message
+            }
+        }
+    } catch (error) {
+        console.log(error)
+        throw new Error(error.response?.data?.message || "Internal Server Error");
+    }
+}
 
-export { createPost, getMypost }
+
+export { createPost, getMypost, toggleLike }

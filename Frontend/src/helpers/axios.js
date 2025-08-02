@@ -13,7 +13,7 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
         
-        if (originalRequest.url.includes("/refresh")) {
+        if (originalRequest.url.includes("/user/refresh")) {
             return Promise.reject(error);
         }
         // Initialize retry count if not present
@@ -23,7 +23,7 @@ api.interceptors.response.use(
             originalRequest._retryCount += 1;
 
             try {
-                await api.post('/refresh');
+                await api.post('/user/refresh');
                 return api(originalRequest);
             } catch (refreshError) {
                 return Promise.reject(refreshError);

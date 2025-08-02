@@ -54,7 +54,6 @@ const createPost = async (req, res) => {
 
 const getMyPost = async (req, res) => {
     try {
-        console.log('fetching')
         const { id } = req.user;
         const posts = await Post.find({ postedBy: id }).populate('postedBy', 'profilePicture userName').sort({ createdAt: -1 });
         res.status(StatusCodes.OK).json(posts)
@@ -65,7 +64,44 @@ const getMyPost = async (req, res) => {
     }
 }
 
+const postLikeToggle = async (req, res) => {
+    try {
+        const { id } = req.user // user id
+        const { postId } = req.params; //post Id
+
+        const post = await Post.findOne({ _id: postId });
+        if (!post) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                message: 'Post not found'
+            })
+        }
+        const index = post.likes.indexOf(id)
+        if (index !== -1) {
+            const likesArray = post.likes.filter((userId) => userId.toString() !== id)
+            post.likes = likesArray;
+            await post.save();
+            return res.status(StatusCodes.OK).json({
+                message: 'Post disliked'
+            })
+        }
+
+        post.likes.push(id)
+        await post.save();
+
+        res.status(StatusCodes.OK).json({
+            message: 'Post liked successfully',
+        });
+
+
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: error.message || "Internal Server Error",
+        })
+    }
+}
+
 module.exports = {
     createPost,
-    getMyPost
+    getMyPost,
+    postLikeToggle
 };
