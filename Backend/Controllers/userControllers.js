@@ -73,7 +73,8 @@ const userLogin = async (req, res) => {
         const refresh = generateRefreshToken(user._id)
         res.cookie('token', token, {
             httpOnly:true,
-            maxAge: 15 * 60 * 1000 // 15 mint
+            maxAge: 15 * 60 * 1000, // 15 mint
+            
         })
         res.cookie('refreshToken', refresh, {
             httpOnly:true,
