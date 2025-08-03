@@ -23,13 +23,13 @@ const PostCard = ({ post }) => {
     const hasLiked = likes.includes(userId)
     const dispatch = useDispatch()
     const [index, setIndex] = useState(0)
-    
+
     // Drag functionality states
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [dragOffset, setDragOffset] = useState(0);
     const imageRef = useRef(null);
-    
+
     const throttledToggleLike = useCallback(
         throttle(async (id) => {
             dispatch(reduxToggleLike({ postId: id, userId }));
@@ -72,9 +72,9 @@ const PostCard = ({ post }) => {
 
     const handleMouseUp = useCallback(() => {
         if (!isDragging) return;
-        
+
         const threshold = 50;
-        
+
         if (Math.abs(dragOffset) > threshold) {
             if (dragOffset > 0 && index > 0) {
                 setIndex(prev => prev - 1);
@@ -82,7 +82,7 @@ const PostCard = ({ post }) => {
                 setIndex(prev => prev + 1);
             }
         }
-        
+
         setIsDragging(false);
         setDragOffset(0);
         setStartX(0);
@@ -105,9 +105,9 @@ const PostCard = ({ post }) => {
 
     const handleTouchEnd = () => {
         if (!isDragging) return;
-        
+
         const threshold = 50;
-        
+
         if (Math.abs(dragOffset) > threshold) {
             if (dragOffset > 0 && index > 0) {
                 setIndex(prev => prev - 1);
@@ -115,18 +115,23 @@ const PostCard = ({ post }) => {
                 setIndex(prev => prev + 1);
             }
         }
-        
+
         setIsDragging(false);
         setDragOffset(0);
         setStartX(0);
     };
+
+
+    const getoptmizedImage = (url)=>{
+        return url.replace('/upload/','/upload/w_600,q_auto,f_auto/')
+    }
 
     // Global event listeners
     useEffect(() => {
         if (isDragging) {
             document.addEventListener('mousemove', handleMouseMove);
             document.addEventListener('mouseup', handleMouseUp);
-            
+
             return () => {
                 document.removeEventListener('mousemove', handleMouseMove);
                 document.removeEventListener('mouseup', handleMouseUp);
@@ -158,7 +163,7 @@ const PostCard = ({ post }) => {
                     {image.length > 0 && (
                         <img
                             ref={imageRef}
-                            src={image[index]}
+                            src={getoptmizedImage(image[index])}
                             alt="Post"
                             className="w-full object-cover rounded select-none"
                             style={{
@@ -187,6 +192,18 @@ const PostCard = ({ post }) => {
                             />
                         </div>
                     )}
+                    {
+                        image.length > 1 &&
+                        <ul className="flex justify-center space-x-1 mt-2">
+                            {image.map((_, i) => (
+                                <li
+                                    key={i}
+                                    className={`w-1 h-1 rounded-full ${i === index ? 'bg-blue-500' : 'bg-gray-400'}`}
+                                />
+                            ))}
+                        </ul>
+                    }
+
                 </div>
 
                 {/* Actions */}
