@@ -1,8 +1,12 @@
 import moment from 'moment';
 import { Heart, MessageCircle, Share } from "lucide-react"; // optional: icon library
 import { toggleLike } from '../Service/postService'
+import { toggleLike as reduxToggleLike } from '../Redux/Features/postSlice'
 import StatusCodes from '../helpers/statusCodes';
+import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast';
+import throttle from 'lodash/throttle'
+import { useCallback } from 'react';
 const PostCard = ({ post }) => {
     const {
         postedBy,
@@ -13,18 +17,25 @@ const PostCard = ({ post }) => {
         createdAt,
         _id
     } = post;
-    
 
-    const handleToggleLike = async (id) => {
-        try {
-            const res = await toggleLike(id)
-            if (res.status === StatusCodes.OK) {
-                toast.success(res.message)
+    const dispatch = useDispatch()
+    const userId = useSelector((state) => state.auth.user._id)
+    const throttledToggleLike = useCallback(
+        throttle(async (id) => {
+            dispatch(reduxToggleLike({ postId: id, userId }));
+            try {
+                const res = await toggleLike(id);
+                if (res.status !== StatusCodes.OK) {
+                    throw new Error(res.message);
+                }
+            } catch (error) {
+                dispatch(reduxToggleLike({ postId: id, userId })); // rollback
+                toast.error("Failed to update like");
+                console.error(error);
             }
-        } catch (error) {
-            console.log(error)
-        }
-    }
+        }, 1500), // throttled for 1 second
+        [dispatch, userId]
+    );
 
 
     return (
@@ -57,10 +68,9 @@ const PostCard = ({ post }) => {
 
                 {/* Actions */}
                 <div className="py-2 flex items-center space-x-4">
-                    <button onClick={()=>handleToggleLike(_id)}>
+                    <button onClick={() => throttledToggleLike(_id)}>
                         <Heart
                             className={`w-6 h-6 cursor-pointer`}
-
                         />
                     </button>
                     <MessageCircle className="w-6 h-6 cursor-pointer" />

@@ -25,16 +25,22 @@ export const postSlice = createSlice({
         addPost: (state, action) => {
             state.posts = [action.payload, ...state.posts]
         },
-        // toggleLike: (state, action) => {
-        //     const { postId, userId } = action.payload
-        //     const post = state.posts.filter((p) => p._id === postId)
-        //     const index = post.indexOf(userId);
-        //     if (index !== -1) {
-        //         post.likes.filter((like) => like !== userId)
-                
-        //     }
+        toggleLike: (state, action) => {
+            const { postId, userId } = action.payload;
+            const post = state.posts.find((p) => p._id === postId);
 
-        // }
+            if (post) {
+                const index = post.likes.indexOf(userId);
+                if (index !== -1) {
+                    // User already liked — remove the like
+                    post.likes = post.likes.filter((like) => like !== userId);
+                } else {
+                    // User hasn't liked — add the like
+                    post.likes.push(userId);
+                }
+            }
+        }
+
     },
     extraReducers: (builder) => {
         builder.addCase(fetchPost.fulfilled, (state, action) => {
@@ -52,5 +58,5 @@ export const postSlice = createSlice({
     }
 })
 
-export const { addPost } = postSlice.actions
+export const { addPost,toggleLike } = postSlice.actions
 export default postSlice.reducer
