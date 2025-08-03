@@ -5,6 +5,7 @@ import Sidebar from './Sidebar';
 import { useState } from "react";
 import Home from "./Home";
 import CreatePost from "./CreatePost";
+import Profile from "./Profile";
 
 const Layout = () => {
     const [activePage, setActivePage] = useState('Home')
@@ -14,6 +15,8 @@ const Layout = () => {
                 return <Home />
             case 'Create':
                 return <CreatePost onClose={setActivePage} />
+            case 'Profile':
+                return <Profile />
             default:
                 return <Home />
         }
