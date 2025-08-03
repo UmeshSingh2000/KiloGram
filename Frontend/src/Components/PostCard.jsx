@@ -19,7 +19,7 @@ const PostCard = ({ post }) => {
         _id
     } = post;
 
-    const userId = useSelector((state) => state.auth.user._id)
+    const userId = useSelector((state) => state.auth?.user?._id)
     const hasLiked = likes.includes(userId)
     const dispatch = useDispatch()
     const [index, setIndex] = useState(0)
