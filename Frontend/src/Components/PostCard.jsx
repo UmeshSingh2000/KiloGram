@@ -122,8 +122,10 @@ const PostCard = ({ post }) => {
     };
 
 
-    const getoptmizedImage = (url)=>{
-        return url.replace('/upload/','/upload/w_600,q_auto,f_auto/')
+    const getoptmizedImage = (url, isProfile = false) => {
+
+        return !isProfile ? url.replace('/upload/', '/upload/w_600,q_auto,f_auto/')
+            : url.replace('/upload/', '/upload/w_200,q_auto,f_auto/')
     }
 
     // Global event listeners
@@ -147,7 +149,7 @@ const PostCard = ({ post }) => {
                     <img
                         className="h-10 w-10 rounded-full object-cover"
                         src={
-                            postedBy.profilePicture ||
+                            getoptmizedImage(postedBy.profilePicture, true) ||
                             "https://avatars.githubusercontent.com/u/124599?v=4"
                         }
                         alt={postedBy.userName}
@@ -231,35 +233,6 @@ const PostCard = ({ post }) => {
                     </p>
                 </div>
             </div>
-
-            <style jsx>{`
-                @keyframes heartBeat {
-                    0% {
-                        transform: scale(0);
-                        opacity: 0;
-                    }
-                    15% {
-                        transform: scale(1.2);
-                        opacity: 0.9;
-                    }
-                    30% {
-                        transform: scale(1);
-                        opacity: 1;
-                    }
-                    50% {
-                        transform: scale(1.1);
-                        opacity: 0.9;
-                    }
-                    70% {
-                        transform: scale(1);
-                        opacity: 0.7;
-                    }
-                    100% {
-                        transform: scale(0.8);
-                        opacity: 0;
-                    }
-                }
-            `}</style>
         </div>
     )
 }

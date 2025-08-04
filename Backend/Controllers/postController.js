@@ -2,6 +2,7 @@ const Post = require('../Database/Models/postSchema');
 const StatusCodes = require('../Utils/statusCodes');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs/promises'); // use promise-based fs for async cleanup
+const User = require('../Database/Models/userSchema')
 
 const createPost = async (req, res) => {
     try {
@@ -43,9 +44,11 @@ const createPost = async (req, res) => {
 
         await newPost.save();
         await newPost.populate('postedBy', 'profilePicture userName')
+        await User.findByIdAndUpdate(id, { $inc: { noOfPosts: 1 } })
         res.status(StatusCodes.CREATED).json({ message: 'Post Created', post: newPost });
 
     } catch (error) {
+        console.log(error)
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             message: error || "Internal Server Error",
         });

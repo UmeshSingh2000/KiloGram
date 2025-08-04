@@ -33,7 +33,11 @@ const postSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Tags'
         }
-    ]
+    ],
+    noOfPosts: {
+        type: Number,
+        default: 0
+    }
 }, {
     timestamps: true
 })

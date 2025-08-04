@@ -29,6 +29,10 @@ const loginUser = async ({ identifier, password }) => {
             }
         }
     } catch (error) {
+        console.log(error)
+        if (error.status === StatusCodes.OVER_LIMIT) {
+            throw new Error(error.response?.data)
+        }
         // console.log(error.response?.data?.message || 'Something Wrong');
         throw new Error(error.response?.data?.message);
     }
@@ -55,7 +59,7 @@ const registerUser = async ({ name, email, password, userName }) => {
             password,
             userName
         })
-    
+
         if (response.status === StatusCodes.CREATED) {
             return {
                 status: StatusCodes.CREATED,

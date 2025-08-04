@@ -25,7 +25,11 @@ const userSchema = new Schema({
     },
     profilePicture: {
         type: String,
-        default : ''
+        default: ''
+    },
+    profilePicturePublicId: {
+        type: String,
+        default: ''
     },
     password: {
         type: String,
@@ -52,7 +56,11 @@ const userSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'User'
         }
-    ]
+    ],
+    noOfPosts: {
+        type: Number,
+        default: 0
+    }
 }, {
     timestamps: true
 })

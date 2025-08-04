@@ -3,6 +3,8 @@ const { generateToken, generateRefreshToken } = require('../Utils/generateToken'
 const isEmail = require('../Utils/isEmail');
 const { hashPassword, comparePassword } = require('../Utils/password');
 const StatusCodes = require('../Utils/statusCodes');
+const cloudinary = require('cloudinary').v2;
+const fs = require('fs').promises
 
 
 const userRegister = async (req, res) => {
@@ -72,12 +74,12 @@ const userLogin = async (req, res) => {
         const token = generateToken(user._id);
         const refresh = generateRefreshToken(user._id)
         res.cookie('token', token, {
-            httpOnly:true,
+            httpOnly: true,
             maxAge: 15 * 60 * 1000, // 15 mint
-            
+
         })
         res.cookie('refreshToken', refresh, {
-            httpOnly:true,
+            httpOnly: true,
             maxAge: 15 * 24 * 60 * 60 * 1000 // 15day
         })
 
@@ -95,7 +97,7 @@ const refreshToken = (req, res) => {
     try {
         const token = generateToken(req.user.id)
         res.cookie('token', token, {
-            httpOnly:true,
+            httpOnly: true,
             maxAge: 15 * 60 * 1000 // 15 mint
         })
         res.status(200).json({ message: "Access token refreshed" });
@@ -105,8 +107,54 @@ const refreshToken = (req, res) => {
     }
 }
 
+const updateUserProfile = async (req, res) => {
+    try {
+        const { id } = req.user
+        const image = req.file;
+        if (!image) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: "Image needed!" });
+
+        }
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: "user does not exist" })
+        }
+
+        //upload to cloudinary
+        const result = await cloudinary.uploader.upload(image.path, {
+            folder: "kiloGram/profile",
+            transformation: [
+                { width: 1200, crop: 'limit' },
+                { quality: "auto" },
+                { fetch_format: "auto" }
+            ]
+        })
+
+        if (user.profilePicturePublicId) {
+            await cloudinary.uploader.destroy(user.profilePicturePublicId)
+        }
+
+        await fs.unlink(image.path); //delete local image
+
+
+        user.profilePicture = result.secure_url;
+        user.profilePicturePublicId = result.public_id
+        await user.save()
+        return res.status(StatusCodes.OK).json({
+            message: "Profile picture updated successfully",
+            profilePicture: user.profilePicture
+        });
+
+
+    } catch (error) {
+        console.error(error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     userRegister,
     userLogin,
-    refreshToken
+    refreshToken,
+    updateUserProfile
 }
