@@ -26,6 +26,7 @@ const loginUser = async ({ identifier, password }) => {
             return {
                 message: response.data.message,
                 status: StatusCodes.OK,
+                user: response.data.user
             }
         }
     } catch (error) {

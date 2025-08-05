@@ -30,7 +30,7 @@ const Login = () => {
       const response = await loginUser(userData)
       if (response.status === StatusCodes.OK) {
         toast.success(response.message)
-        dispatch(loginSucces())
+        dispatch(loginSucces(response.user))
         navigate('/home')
       }
       else if (response.status === StatusCodes.NO_CONTENT) {
