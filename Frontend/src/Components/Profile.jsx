@@ -5,6 +5,7 @@ import { useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { updateUserProfile } from '../Service/userService'
 import Loader from './Loader/Loader'
+import optimise from '../helpers/getOptimisedImageUrl'
 
 
 const Profile = () => {
@@ -42,16 +43,45 @@ const Profile = () => {
         <div className="bg-black text-white min-h-screen">
             {/* Profile Section */}
             <div className="px-8 py-8">
-                <div className="flex items-start space-x-20">
+                <div className="flex items-start space-x-10">
                     {/* Profile Picture */}
-                    <div className="flex-shrink-0">
-                        <div className="w-36 h-36 bg-gray-600 rounded-full flex items-center justify-center relative">
-                            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center">
-                                <input accept="image/*" onChange={(e) => handleFileChange(e)} ref={imageSelectorRef} type='file' className='hidden' />
-                                <Camera className="w-10 h-10 cursor-pointer text-gray-400" onClick={handleImageClick} />
+                    {user.profilePicture ? (
+                        <div className="relative group w-36 h-36">
+                            <img
+                                src={optimise(user.profilePicture, 300)}
+                                alt="Profile"
+                                className="w-36 h-36 object-cover rounded-full border-2 border-gray-700 group-hover:brightness-75 transition duration-200"
+                            />
+                            <div
+                                onClick={handleImageClick}
+                                className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition"
+                            >
+                                <Camera className="w-8 h-8 text-white" />
                             </div>
+                            <input
+                                accept="image/*"
+                                onChange={(e) => handleFileChange(e)}
+                                ref={imageSelectorRef}
+                                type="file"
+                                className="hidden"
+                            />
                         </div>
-                    </div>
+                    ) : (
+                        <div
+                            className="w-36 h-36 bg-gray-700 rounded-full flex items-center justify-center cursor-pointer group relative"
+                            onClick={handleImageClick}
+                        >
+                            <Camera className="w-10 h-10 text-gray-400 group-hover:text-white transition" />
+                            <input
+                                accept="image/*"
+                                onChange={(e) => handleFileChange(e)}
+                                ref={imageSelectorRef}
+                                type="file"
+                                className="hidden"
+                            />
+                        </div>
+                    )}
+
 
                     {/* Stats and Info */}
                     <div className="flex-1 pt-4">

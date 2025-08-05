@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast';
 import throttle from 'lodash/throttle'
 import { useCallback, useEffect, useState, useRef } from 'react';
+import optimise from '../helpers/getOptimisedImageUrl';
 
 const PostCard = ({ post }) => {
     const {
@@ -122,11 +123,7 @@ const PostCard = ({ post }) => {
     };
 
 
-    const getoptmizedImage = (url, isProfile = false) => {
 
-        return !isProfile ? url.replace('/upload/', '/upload/w_600,q_auto,f_auto/')
-            : url.replace('/upload/', '/upload/w_200,q_auto,f_auto/')
-    }
 
     // Global event listeners
     useEffect(() => {
@@ -149,7 +146,7 @@ const PostCard = ({ post }) => {
                     <img
                         className="h-10 w-10 rounded-full object-cover"
                         src={
-                            getoptmizedImage(postedBy.profilePicture, true) ||
+                            optimise(postedBy.profilePicture, 200) ||
                             "https://avatars.githubusercontent.com/u/124599?v=4"
                         }
                         alt={postedBy.userName}
@@ -165,7 +162,7 @@ const PostCard = ({ post }) => {
                     {image.length > 0 && (
                         <img
                             ref={imageRef}
-                            src={getoptmizedImage(image[index])}
+                            src={optimise(image[index], 600)}
                             alt="Post"
                             className="w-full object-cover rounded select-none"
                             style={{
